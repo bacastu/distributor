@@ -8,11 +8,21 @@ public class Distributor {
 
     private static Logger log = LogManager.getLogger(Distributor.class);
 
-    public static void main(String[] arg) {
-        System.out.println("Start Maven project");
+    public Distributor(){
 
+    }
+
+    public Integer testJunit(){
+        return 4;
+    }
+
+    public static void main(String[] arg) {
         if(log.isDebugEnabled()){
             log.debug("Start Maven project with log4J");
+        }
+        Distributor d = new Distributor();
+        if(log.isDebugEnabled()){
+            log.debug("Distributor:"+d.testJunit());
         }
     }
 }
