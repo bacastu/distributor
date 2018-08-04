@@ -1,24 +1,20 @@
 package bean.items;
 
-import java.sql.Time;
-
 public class ScheduleItem {
-    private int     id;
-    private int     idStationSrc;
-    private int     idStationDest;
-    private Time    startHour;
-    private Time    endHour;
-    private String  trainName;
-    private int     trainTrack;
+    private int         id;
+    private int         idStationSrc;
+    private int         idStationDest;
+    private String      startHour;
+    private String      trainName;
+    private int         trainTrack;
 
     public ScheduleItem(){}
 
-    public ScheduleItem(int id, int idStationSrc, int idStationDest, Time startHour, Time endHour, String trainName, int trainTrack) {
+    public ScheduleItem(int id, int idStationSrc, int idStationDest, String startHour, String trainName, int trainTrack) {
         this.id = id;
         this.idStationSrc = idStationSrc;
         this.idStationDest = idStationDest;
         this.startHour = startHour;
-        this.endHour = endHour;
         this.trainName = trainName;
         this.trainTrack = trainTrack;
     }
@@ -47,20 +43,12 @@ public class ScheduleItem {
         this.idStationDest = idStationDest;
     }
 
-    public Time getStartHour() {
+    public String getStartHour() {
         return startHour;
     }
 
-    public void setStartHour(Time startHour) {
+    public void setStartHour(String startHour) {
         this.startHour = startHour;
-    }
-
-    public Time getEndHour() {
-        return endHour;
-    }
-
-    public void setEndHour(Time endHour) {
-        this.endHour = endHour;
     }
 
     public String getTrainName() {
@@ -86,7 +74,6 @@ public class ScheduleItem {
                 ", idStationSrc=" + idStationSrc +
                 ", idStationDest=" + idStationDest +
                 ", startHour=" + startHour +
-                ", endHour=" + endHour +
                 ", trainName='" + trainName + '\'' +
                 ", trainTrack=" + trainTrack +
                 '}';

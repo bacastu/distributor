@@ -5,10 +5,11 @@ import bean.items.ScheduleItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joda.time.DateTime;
 
 import java.io.File;
-import java.sql.Time;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 
 public class ScheduleUtils {
 
@@ -49,13 +50,19 @@ public class ScheduleUtils {
                 log.debug("Initialize "+Schedules.class.getSimpleName()+"...");
             }
             schedules = new Schedules();
-            for(int i=0;i<=100;i++){
-                for(int v=0;v<=10;v++){
-                    Time t = null;
-                    ScheduleItem si = new ScheduleItem(i, i, 100-i, t, t, "SC "+df.format(i), v);
-                    schedules.addSchedule(si);
+            DateTime now = DateTime.now();
+            now = now.withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0);//now 06:00
+            for(int d=0;d<=10;d++){
+                for(int i=0;i<=100;i++) {
+                    DateTime hourStart = new DateTime(now);
+                    for (int v = 0; v <= 10; v++) {
+                        DateTime hourEnd = null;
+                        ScheduleItem si = new ScheduleItem(i, i, 100 - i, dateToString(hourStart), "Train N° " + df.format(i), v);
+                        schedules.addSchedule(si);
+                        hourStart = hourStart.plusHours(1).plusMinutes(30);
+                    }
                 }
-
+                now = now.plusDays(1);
             }
             save();
             if(log.isDebugEnabled()){
@@ -80,4 +87,14 @@ public class ScheduleUtils {
         }
     }
 
+    private String dateToString(DateTime date){
+        try{
+            if(date==null){
+                return null;
+            }
+            return new SimpleDateFormat("dd/MM/yyyy HH:mm").format(date.toDate());
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+    }
 }

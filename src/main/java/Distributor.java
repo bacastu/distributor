@@ -33,9 +33,10 @@ public class Distributor {
             log.debug("Start Distributor");
         }
         Distributor d = new Distributor();
-        /*if(log.isDebugEnabled()){
+        if(log.isDebugEnabled()){
             log.debug("Distributor:"+d.testJunit());
-        }*/
+        }
+
 
         /*
         //Container

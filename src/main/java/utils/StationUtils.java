@@ -46,8 +46,8 @@ public class StationUtils {
                 log.debug("Initialize "+Stations.class.getSimpleName()+"...");
             }
             stations = new Stations();
-            for(int i=0;i<=100;i++){
-                StationItem si = new StationItem(i, "Station "+i, "Address "+i, 7000+(50*i));
+            for(int i=0;i<=10;i++){
+                StationItem si = new StationItem(i, "Station N° "+i, "Address "+i, 7000+(50*i));
                 stations.addStation(si);
             }
             save();
