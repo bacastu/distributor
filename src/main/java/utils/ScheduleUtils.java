@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
 public class ScheduleUtils {
@@ -45,25 +44,27 @@ public class ScheduleUtils {
 
     private void initialize(){
         try{
-            DecimalFormat df = new DecimalFormat("####");
             if(log.isDebugEnabled()){
                 log.debug("Initialize "+Schedules.class.getSimpleName()+"...");
             }
             schedules = new Schedules();
             DateTime now = DateTime.now();
             now = now.withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0);//now 06:00
-            for(int d=0;d<=10;d++){
-                for(int i=0;i<=100;i++) {
+            int scheduleId = 0;
+            for(int d=0;d<=10;d++) {
+                for (int s = 0; s <= 10; s++) {
                     DateTime hourStart = new DateTime(now);
-                    for (int v = 0; v <= 10; v++) {
-                        DateTime hourEnd = null;
-                        ScheduleItem si = new ScheduleItem(i, i, 100 - i, dateToString(hourStart), "Train N° " + df.format(i), v);
+                    hourStart = hourStart.plusMinutes(s*5);
+                    for (int t = 0; t <= 10; t++) {
+                        ScheduleItem si = new ScheduleItem(scheduleId, s, 10 - s, dateToString(hourStart), t);
                         schedules.addSchedule(si);
                         hourStart = hourStart.plusHours(1).plusMinutes(30);
+                        scheduleId++;
                     }
                 }
                 now = now.plusDays(1);
             }
+
             save();
             if(log.isDebugEnabled()){
                 log.debug("Initialize "+Schedules.class.getSimpleName()+" finished");

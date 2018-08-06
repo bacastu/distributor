@@ -5,18 +5,16 @@ public class ScheduleItem {
     private int         idStationSrc;
     private int         idStationDest;
     private String      startHour;
-    private String      trainName;
-    private int         trainTrack;
+    private int         idTrain;
 
     public ScheduleItem(){}
 
-    public ScheduleItem(int id, int idStationSrc, int idStationDest, String startHour, String trainName, int trainTrack) {
+    public ScheduleItem(int id, int idStationSrc, int idStationDest, String startHour, int idTrain) {
         this.id = id;
         this.idStationSrc = idStationSrc;
         this.idStationDest = idStationDest;
         this.startHour = startHour;
-        this.trainName = trainName;
-        this.trainTrack = trainTrack;
+        this.idTrain = idTrain;
     }
 
     public int getId() {
@@ -51,22 +49,14 @@ public class ScheduleItem {
         this.startHour = startHour;
     }
 
-    public String getTrainName() {
-        return trainName;
+    public int getIdTrain() {
+        return idTrain;
     }
 
-    public void setTrainName(String trainName) {
-        this.trainName = trainName;
+    public void setIdTrain(int idTrain) {
+        this.idTrain = idTrain;
     }
-
-    public int getTrainTrack() {
-        return trainTrack;
-    }
-
-    public void setTrainTrack(int trainTrack) {
-        this.trainTrack = trainTrack;
-    }
-
+    
     @Override
     public String toString() {
         return "\n\tScheduleItem{" +
@@ -74,8 +64,7 @@ public class ScheduleItem {
                 ", idStationSrc=" + idStationSrc +
                 ", idStationDest=" + idStationDest +
                 ", startHour=" + startHour +
-                ", trainName='" + trainName + '\'' +
-                ", trainTrack=" + trainTrack +
+                ", idTrain=" + idTrain +
                 '}';
     }
 }

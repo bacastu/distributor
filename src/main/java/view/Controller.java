@@ -2,6 +2,7 @@ package view;
 
 import bean.items.ScheduleItem;
 import bean.items.StationItem;
+import bean.items.TrainItem;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -11,16 +12,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joda.time.DateTime;
 import utils.ScheduleUtils;
 import utils.StationUtils;
+import utils.TrainUtils;
 
 import java.net.URL;
 import java.util.List;
@@ -32,11 +33,23 @@ public class Controller implements Initializable{
 
     @FXML
     private ComboBox comboStationHoraire;
+    @FXML
+    private ComboBox comboTrainHoraire;
 
     @FXML
     private TableView<TableHoraire> tableHoraire;
 
+    @FXML
+    private ToggleGroup groupRadioHoraire;
+    @FXML
+    private RadioButton radioStationHoraire;
+    @FXML
+    private RadioButton radioTrainHoraire;
+    @FXML
+    private DatePicker dateHoraire;
+
     private StationUtils stationUtils;
+    private TrainUtils trainUtils;
     private ScheduleUtils scheduleUtils;
 
     public Controller(){
@@ -51,6 +64,16 @@ public class Controller implements Initializable{
             stationUtils = StationUtils.getInstance();
             if(log.isDebugEnabled()){
                 log.debug("Loading station file finished");
+            }
+        }
+
+        if (trainUtils == null) {
+            if(log.isDebugEnabled()){
+                log.debug("Loading train file ...");
+            }
+            trainUtils = TrainUtils.getInstance();
+            if(log.isDebugEnabled()){
+                log.debug("Loading train file finished");
             }
         }
 
@@ -78,16 +101,31 @@ public class Controller implements Initializable{
     }
 
     public void onClickSearchHoraire(MouseEvent event) throws Exception{
-        String valueComboStationHoraire = (String)comboStationHoraire.getValue();
-        StationItem station = stationUtils.getStations().getStationByName(valueComboStationHoraire);
-        List<ScheduleItem> scheduleItems = scheduleUtils.getSchedules().getScheduleItemsByStationId(station.getId());
+        DateTime date = new DateTime()
+                .withDayOfMonth(dateHoraire.getValue().getDayOfMonth())
+                .withMonthOfYear(dateHoraire.getValue().getMonthValue())
+                .withYear(dateHoraire.getValue().getYear());
+        List<ScheduleItem> scheduleItems;
+        if(radioStationHoraire.isSelected()) {
+            String valueComboStationHoraire = (String) comboStationHoraire.getValue();
+            StationItem station = stationUtils.getStations().getStationByName(valueComboStationHoraire);
+            scheduleItems = scheduleUtils.getSchedules().getScheduleItemsByStationId(station.getId(), date);
+        }else{
+            String valueComboTrainHoraire = (String)comboTrainHoraire.getValue();
+            TrainItem train = trainUtils.getTrains().getTrainItemsByTrainName(valueComboTrainHoraire);
+            scheduleItems = scheduleUtils.getSchedules().getScheduleItemsByTrainId(train.getId(), date);
+        }
+
+
+
+
 
         if(tableHoraire.getColumns().size() == 0){
             TableColumn trainName = new TableColumn("Train");
             trainName.setCellValueFactory(
                     new PropertyValueFactory<TableHoraire,String>("trainName")
             );
-            TableColumn startHour = new TableColumn("Départ");
+            TableColumn startHour = new TableColumn("DÃ©part");
             startHour.setCellValueFactory(
                     new PropertyValueFactory<TableHoraire,String>("startHour")
             );
@@ -97,7 +135,8 @@ public class Controller implements Initializable{
         ObservableList<TableHoraire> items = FXCollections.observableArrayList();
         tableHoraire.setItems(items);
         scheduleItems.forEach(item -> {
-                items.addAll(new TableHoraire(item.getTrainName(), item.getStartHour()));
+                TrainItem trainHoraire = trainUtils.getTrains().getTrainItemsByTrainId(item.getIdTrain());
+                items.addAll(new TableHoraire(trainHoraire.getTrainName(), item.getStartHour()));
             }
         );
     }
@@ -114,6 +153,33 @@ public class Controller implements Initializable{
         comboStationHoraire.setItems(items);
     }
 
+    public void initializeTrainHoraire(Event event) throws Exception{
+        if(comboTrainHoraire.getItems().size() > 0){
+            return;
+        }
+        List<TrainItem> trainItems = trainUtils.getTrains().getTrainList();
+        ObservableList<String> items = FXCollections.observableArrayList();
+        for(TrainItem train:trainItems){
+            items.add(train.getTrainName());
+        }
+        comboTrainHoraire.setItems(items);
+
+        if(groupRadioHoraire == null) {
+            groupRadioHoraire = new ToggleGroup();
+            radioStationHoraire.setToggleGroup(groupRadioHoraire);
+            radioTrainHoraire.setToggleGroup(groupRadioHoraire);
+        }
+    }
+
+    public void onClickOnRadioHoraire(Event event) throws Exception{
+        if(((RadioButton)event.getSource()).getId().equals("radioStationHoraire")){
+            comboStationHoraire.setDisable(false);
+            comboTrainHoraire.setDisable(true);
+        }else if(((RadioButton)event.getSource()).getId().equals("radioTrainHoraire")){
+            comboStationHoraire.setDisable(true);
+            comboTrainHoraire.setDisable(false);
+        }
+    }
     //-------------------------------------------------------------------
     // Utils
     //-------------------------------------------------------------------
