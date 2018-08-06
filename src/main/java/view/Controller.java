@@ -125,18 +125,34 @@ public class Controller implements Initializable{
             trainName.setCellValueFactory(
                     new PropertyValueFactory<TableHoraire,String>("trainName")
             );
+            TableColumn stationStartName = new TableColumn("Gare de départ");
+            stationStartName.setCellValueFactory(
+                    new PropertyValueFactory<TableHoraire,String>("stationStartName")
+            );
             TableColumn startHour = new TableColumn("Départ");
             startHour.setCellValueFactory(
                     new PropertyValueFactory<TableHoraire,String>("startHour")
             );
-            tableHoraire.getColumns().addAll(trainName, startHour);
+            TableColumn stationEndName = new TableColumn("Gare d'arrivée");
+            stationEndName.setCellValueFactory(
+                    new PropertyValueFactory<TableHoraire,String>("stationEndName")
+            );
+            TableColumn endHour = new TableColumn("Arrivée");
+            endHour.setCellValueFactory(
+                    new PropertyValueFactory<TableHoraire,String>("endHour")
+            );
+            tableHoraire.getColumns().addAll(trainName, stationStartName, startHour, stationEndName,endHour);
         }
 
         ObservableList<TableHoraire> items = FXCollections.observableArrayList();
         tableHoraire.setItems(items);
         scheduleItems.forEach(item -> {
                 TrainItem trainHoraire = trainUtils.getTrains().getTrainItemsByTrainId(item.getIdTrain());
-                items.addAll(new TableHoraire(trainHoraire.getTrainName(), item.getStartHour()));
+                StationItem stationStartHoraire = stationUtils.getStations().getStationById(item.getIdStationSrc());
+                ScheduleItem scheduleHoraire = scheduleUtils.getSchedules().getScheduleItemsByTrainIdAndDestId(item.getIdStationDest(),trainHoraire.getId());
+                StationItem stationEndHoraire = stationUtils.getStations().getStationById(scheduleHoraire.getIdStationDest());
+
+                items.addAll(new TableHoraire(trainHoraire.getTrainName(), stationStartHoraire.getName(), item.getStartHour(), stationEndHoraire.getName(), scheduleHoraire.getStartHour()));
             }
         );
     }

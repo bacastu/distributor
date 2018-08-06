@@ -27,6 +27,10 @@ public class Schedules {
     public List<ScheduleItem> getScheduleItemsByTrainId(int trainId, DateTime date) {
         return scheduleList.stream().filter(s -> s.getIdTrain() == trainId && filterDate(s.getStartHour(),date)).collect(Collectors.toList());
     }
+    public ScheduleItem getScheduleItemsByTrainIdAndDestId(int destId, int trainId) {
+        return scheduleList.stream().filter(s -> s.getIdStationDest() == destId && s.getIdTrain() == trainId).collect(Collectors.toList()).get(0);
+    }
+
 
     private boolean filterDate(String startHour, DateTime date){
         try {

@@ -20,6 +20,11 @@ public class Stations {
     public StationItem getStationByName(String stationName){
         return stationList.stream().filter(s -> s.getName().equals(stationName)).collect(Collectors.toList()).get(0);
     }
+    public StationItem getStationById(int stationId){
+        return stationList.stream().filter(s -> s.getId() == stationId).collect(Collectors.toList()).get(0);
+    }
+
+
 
     public void setStationList(List<StationItem> stationList) {
         this.stationList = stationList;
