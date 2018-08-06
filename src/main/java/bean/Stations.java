@@ -4,6 +4,7 @@ import bean.items.StationItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Stations {
 
@@ -14,6 +15,10 @@ public class Stations {
 
     public List<StationItem> getStationList() {
         return stationList;
+    }
+
+    public StationItem getStationByName(String stationName){
+        return stationList.stream().filter(s -> s.getName().equals(stationName)).collect(Collectors.toList()).get(0);
     }
 
     public void setStationList(List<StationItem> stationList) {

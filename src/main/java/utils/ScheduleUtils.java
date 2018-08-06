@@ -97,4 +97,8 @@ public class ScheduleUtils {
             throw new RuntimeException(e);
         }
     }
+
+    public Schedules getSchedules() {
+        return schedules;
+    }
 }

@@ -4,6 +4,7 @@ import bean.items.ScheduleItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Schedules {
 
@@ -14,6 +15,10 @@ public class Schedules {
 
     public List<ScheduleItem> getScheduleItems() {
         return scheduleList;
+    }
+
+    public List<ScheduleItem> getScheduleItemsByStationId(int stationId) {
+        return scheduleList.stream().filter(s -> s.getIdStationSrc() == stationId).collect(Collectors.toList());
     }
 
     public void setScheduleItems(List<ScheduleItem> scheduleItems) {
